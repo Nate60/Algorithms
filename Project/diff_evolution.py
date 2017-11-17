@@ -45,7 +45,6 @@ start = time()
 end = time() - start
 for e in range(0, 9):
     avg = np.random.uniform(0.0,0.0,(NFC/P_MAX*D))
-    print type(avg[0])
     for r in range(1, 52):
         best = [0 for p in range(NFC/P_MAX * D)]
         pop = np.random.uniform(-10.0, 10.0, (P_MAX, D))

@@ -54,6 +54,13 @@ for e in range(0, 9):
         fgBest = fness[0]
         pBest = pop
         fpBest = fness
+        
+        for j in range(P_MAX):
+            if(fness[j] < fgBest):
+                fgBest = fness[j]
+                for d in range(D):
+                        gBest[d] = pop[j][d]
+
         for x in range(0, NFC/P_MAX * D):
             end = time() - start
             
@@ -61,23 +68,30 @@ for e in range(0, 9):
             W = W * (((NFC/P_MAX * D) - x * 1.0) / ((NFC/P_MAX) *D))
 
             for j in range(P_MAX):
-                if(fness[j] < fgBest):
-                    fgBest = fness[j]
-                    gBest = pop[j]
-
-            for j in range(P_MAX):
                 for d in range(D):
                     rho1 = np.random.rand()
                     rho2 = np.random.rand()
                     vel[j][d] = W * vel[j][d] + rho1 * C1 * (pBest[j][d] - pop[j][d]) + rho2 * C2 * (gBest[d] - pop[j][d])
-                    if(pop[j][d] + vel[j][d] >= -10 and pop[j][d] + vel[j][d] <= 10):
+                    if((pop[j][d] + vel[j][d]) >= -10 and (pop[j][d] + vel[j][d]) <= 10):
                         pop[j][d] = pop[j][d] + vel[j][d]
+                    elif((pop[j][d] + vel[j][d]) < -10):
+                        pop[j][d] = -10
+                        vel[j][d] = vel[j][d] * -1
+                    elif((pop[j][d] + vel[j][d]) > 10):
+                        pop[j][d] = 10
+                        vel[j][d] = vel[j][d] * -1
 
                 fness[j] = eval(pop[j],e)
 
                 if(fness[j] < fpBest[j]):
                     fpBest[j] = fness[j]
-                    pBest[j] = pop[j]
+                    for d in range(D):
+                        pBest[j][d] = pop[j][d]
+
+                if(fness[j] < fgBest):
+                    fgBest = fness[j]
+                    for d in range(D):
+                        gBest[d] = pop[j][d]
 
                 if(fness[j] < best[x]):
                     best[x] = fness[j]
