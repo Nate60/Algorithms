@@ -65,7 +65,7 @@ for e in range(0, 9):
             end = time() - start
             
             print("%3d  iteration: %3d  function: %s    time: %10.4f s" % ((x * 1.0)/(NFC/P_MAX * D) * 100, r, prefix, end))
-            W = W * (((NFC/P_MAX * D) - x * 1.0) / ((NFC/P_MAX) *D))
+            W = 0.5 * (((NFC/P_MAX * D) - x * 1.0) / ((NFC/P_MAX) *D)) + 0.4
 
             for j in range(P_MAX):
                 for d in range(D):

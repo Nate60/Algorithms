@@ -103,13 +103,15 @@ for x in range(0, NFC/P_MAX * D):
     best = fness[0]
     end = time.time() - start
     
-    W = W * (((NFC/P_MAX * D) - x * 1.0) / ((NFC/P_MAX) *D))
+    W = 0.5 * (((NFC/P_MAX * D) - x * 1.0) / ((NFC/P_MAX) *D)) + 0.4
 
     for j in range(P_MAX):
+        rho1 = np.random.rand()
+        rho2 = np.random.rand()
         for d in range(D):
-            rho1 = np.random.rand()
-            rho2 = np.random.rand()
+
             vel[j][d] = W * vel[j][d] + rho1 * C1 * (pBest[j][d] - pop[j][d]) + rho2 * C2 * (gBest[d] - pop[j][d])
+
             if((pop[j][d] + vel[j][d]) >= -10 and (pop[j][d] + vel[j][d]) <= 10):
                 pop[j][d] = pop[j][d] + vel[j][d]
             elif((pop[j][d] + vel[j][d]) < -10):
