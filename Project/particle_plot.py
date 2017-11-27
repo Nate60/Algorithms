@@ -87,7 +87,9 @@ W = 0.9
 pop = np.random.uniform(-10.0, 10.0, (P_MAX, D))
 vel = np.random.uniform(-1.0, 1.0, (P_MAX, D))
 fness = [eval(pop[x],e) for x in range(P_MAX)]
-gBest = pop[0]
+gBest = np.random.uniform(0.0,0.0,(D))
+for x in range(D):
+    gBest[x] = pop[0][x]
 fgBest = fness[0]
 pBest = pop
 fpBest = fness
@@ -109,6 +111,8 @@ for x in range(0, NFC/P_MAX * D):
         rho1 = np.random.rand()
         rho2 = np.random.rand()
         for d in range(D):
+
+            print (str(gBest[d]))
 
             vel[j][d] = W * vel[j][d] + rho1 * C1 * (pBest[j][d] - pop[j][d]) + rho2 * C2 * (gBest[d] - pop[j][d])
 
@@ -139,7 +143,10 @@ for x in range(0, NFC/P_MAX * D):
     print("%3d  function: %s    time: %10.4f s %10.10f" % ((x * 1.0)/(NFC/P_MAX * D) * 100, prefix, end, best))
 
     #print best[x]
-    p.drawNow(pop,fness,P_MAX)
+    if(x % 6 == 0):
+        p.drawNow(pop,fness,P_MAX)
+    if(x == 0):
+        time.sleep(1)
 
 
                     

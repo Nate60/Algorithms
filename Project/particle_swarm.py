@@ -51,7 +51,9 @@ for e in range(0, 9):
         vel = np.random.uniform(-1.0, 1.0, (P_MAX, D))
         fness = [eval(pop[x],e) for x in range(P_MAX)]
         best = [fness[0] for x in range(NFC/P_MAX * D)]
-        gBest = pop[0]
+        gBest = np.random.uniform(0.0,0.0,(D))
+        for x in range(D):
+            gBest[x] = pop[0][x]
         fgBest = fness[0]
         pBest = pop
         fpBest = fness
@@ -69,18 +71,21 @@ for e in range(0, 9):
             W = 0.5 * (((NFC/P_MAX * D) - x * 1.0) / ((NFC/P_MAX) *D)) + 0.4
 
             for j in range(P_MAX):
+
+                rho1 = np.random.rand()
+                rho2 = np.random.rand()
+
                 for d in range(D):
-                    rho1 = np.random.rand()
-                    rho2 = np.random.rand()
+
                     vel[j][d] = W * vel[j][d] + rho1 * C1 * (pBest[j][d] - pop[j][d]) + rho2 * C2 * (gBest[d] - pop[j][d])
                     if((pop[j][d] + vel[j][d]) >= -10 and (pop[j][d] + vel[j][d]) <= 10):
                         pop[j][d] = pop[j][d] + vel[j][d]
                     elif((pop[j][d] + vel[j][d]) < -10):
                         pop[j][d] = -10
-                        vel[j][d] = vel[j][d] * -1/2
+                        vel[j][d] = vel[j][d] * -1/2.0
                     elif((pop[j][d] + vel[j][d]) > 10):
                         pop[j][d] = 10
-                        vel[j][d] = vel[j][d] * -1/2
+                        vel[j][d] = vel[j][d] * -1/2.0
 
                 fness[j] = eval(pop[j],e)
 
