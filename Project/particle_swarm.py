@@ -44,6 +44,7 @@ start = time()
 end = time() - start
 for e in range(0, 9):
     avg = np.random.uniform(0.0,0.0,(NFC/P_MAX*D))
+    runs = np.random.uniform(0.0,0.0,(P_MAX * 51, D))
     for r in range(1, 52):
         W = 0.9
         pop = np.random.uniform(-10.0, 10.0, (P_MAX, D))
@@ -76,10 +77,10 @@ for e in range(0, 9):
                         pop[j][d] = pop[j][d] + vel[j][d]
                     elif((pop[j][d] + vel[j][d]) < -10):
                         pop[j][d] = -10
-                        vel[j][d] = vel[j][d] * -1
+                        vel[j][d] = vel[j][d] * -1/2
                     elif((pop[j][d] + vel[j][d]) > 10):
                         pop[j][d] = 10
-                        vel[j][d] = vel[j][d] * -1
+                        vel[j][d] = vel[j][d] * -1/2
 
                 fness[j] = eval(pop[j],e)
 
@@ -99,14 +100,17 @@ for e in range(0, 9):
             #print best[x]
             avg[x] += best[x]
 
-        out_file = open("data/" + str(D) + "_" + prefix + "_pso_points" + str(r) + ".csv","w")
-        full_output = pop.tolist()
-        for line in full_output:
-            out_file.write(str(line)[1:-1] + ', ' + str(eval(line,e)) + "\n")
-        out_file.close()
-        for x in range (NFC/P_MAX*D):
-            avg[x] = avg[x]/51.0
-    
+        for x in range(P_MAX):
+            runs[x+(P_MAX * (r-1))] = pop[x]
+
+    out_file = open("data/" + str(D) + "_" + prefix + "_pso_points" + ".csv","w")
+    full_output = runs.tolist()
+    for line in full_output:
+        out_file.write(str(line)[1:-1] + ', ' + str(eval(line,e)) + "\n")
+    out_file.close()
+    for x in range (NFC/P_MAX*D):
+        avg[x] = avg[x]/51.0
+
     plot_file = open("plots/" + str(D) + "_" + prefix + "_pso_plot" + ".csv","w")
     for line in avg:
         plot_file.write(str(line) + "\n")

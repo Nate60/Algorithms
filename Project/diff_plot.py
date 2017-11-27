@@ -157,6 +157,9 @@ for x in range(0, NFC/P_MAX * D):
         
     
     #graph(pop, e)
-    p.drawNow(pop,fness,P_MAX)
+    if(x % 6 == 0):
+        p.drawNow(pop,fness,P_MAX)
+    if(x == 0):
+        time.sleep(1)
 
 

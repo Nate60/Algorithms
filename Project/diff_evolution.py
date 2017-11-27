@@ -45,6 +45,7 @@ start = time()
 end = time() - start
 for e in range(0, 9):
     avg = np.random.uniform(0.0,0.0,(NFC/P_MAX*D))
+    runs = np.random.uniform(0.0,0.0,(P_MAX * 51, D))
     for r in range(1, 52):
         best = [0 for p in range(NFC/P_MAX * D)]
         pop = np.random.uniform(-10.0, 10.0, (P_MAX, D))
@@ -99,16 +100,18 @@ for e in range(0, 9):
             
             for j in range(P_MAX):
                 pop[j] = pop_new[j]
-    
-        out_file = open("data/" + str(D) + "_" + prefix + "_de_points" + str(r) + ".csv","w")
-        full_output = pop.tolist()
-        for line in full_output:
-            out_file.write(str(line)[1:-1] + ', ' + str(eval(line,e)) + "\n")
-        out_file.close()
+        for x in range(P_MAX):
+            runs[x+(P_MAX * (r-1))] = pop[x]
             #print str(e) +" " +  str(r) + " " + prefix
     for x in range (NFC/P_MAX*D):
             avg[x] = avg[x]/51
     
+    out_file = open("data/" + str(D) + "_" + prefix + "_de_points" + ".csv","w")
+    full_output = runs.tolist()
+    for line in full_output:
+        out_file.write(str(line)[1:-1] + ', ' + str(eval(line,e)) + "\n")
+    out_file.close()
+
     plot_file = open("plots/" + str(D) + "_" + prefix + "_de_plot" + ".csv","w")
     for line in avg:
         plot_file.write(str(line)[1:-1] + "\n")
