@@ -47,13 +47,19 @@ for e in range(0, 9):
     avg = np.random.uniform(0.0,0.0,(NFC/P_MAX*D))
     runs = np.random.uniform(0.0,0.0,(P_MAX * 51, D))
     for r in range(1, 52):
-        best = [0 for p in range(NFC/P_MAX * D)]
         pop = np.random.uniform(-10.0, 10.0, (P_MAX, D))
         fness = [eval(pop[x],e) for x in range(P_MAX)]
+        fgBest = fness[0]
+        prev = fgBest
+        for j in range(P_MAX):
+            if(fness[j] < fgBest):
+                fgBest = fness[j]
+
+        end = time() - start
+        print("iteration: %3d  function: %s    time: %10.4f s" % (r, prefix, end))
+
         for x in range(0, NFC/P_MAX * D):
-            best[x] = fness[0]
-            end = time() - start
-            print("%3d  iteration: %3d  function: %s    time: %10.4f s" % ((x * 1.0)/(NFC/P_MAX * D) * 100, r, prefix, end))
+            prev = fgBest
             pop_new = [[0.0 for i in range(D)] for k in range(P_MAX)]
             for j in range(P_MAX):
                 a = 0
@@ -93,18 +99,20 @@ for e in range(0, 9):
                 else:
                     pop_new[j] = pop[j]
 
-                if(fness[j] < best[x]):
-                    best[x] = fness[j]
+                if(fness[j] < fgBest):
+                    fgBest = fness[j] 
 
-            avg[x] += best[x]
+            avg[x] += fgBest
             
             for j in range(P_MAX):
                 pop[j] = pop_new[j]
+
         for x in range(P_MAX):
             runs[x+(P_MAX * (r-1))] = pop[x]
             #print str(e) +" " +  str(r) + " " + prefix
+
     for x in range (NFC/P_MAX*D):
-            avg[x] = avg[x]/51
+        avg[x] /= 51
     
     out_file = open("data/" + str(D) + "_" + prefix + "_de_points" + ".csv","w")
     full_output = runs.tolist()
@@ -113,7 +121,7 @@ for e in range(0, 9):
     out_file.close()
 
     plot_file = open("plots/" + str(D) + "_" + prefix + "_de_plot" + ".csv","w")
-    for line in avg:
-        plot_file.write(str(line)[1:-1] + "\n")
+    for x in range(NFC/P_MAX*D):
+        plot_file.write(str(avg[x]) + "\n")
     plot_file.close()
     

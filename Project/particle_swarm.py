@@ -39,18 +39,22 @@ def eval(xinputs, E):
     else:
         prefix = "katsuura"
         return katsuura(xinputs)
+
 print "Init..."
 start = time()
 end = time() - start
+
 for e in range(0, 9):
+
     avg = np.random.uniform(0.0,0.0,(NFC/P_MAX*D))
     runs = np.random.uniform(0.0,0.0,(P_MAX * 51, D))
+
     for r in range(1, 52):
+
         W = 0.9
         pop = np.random.uniform(-10.0, 10.0, (P_MAX, D))
         vel = np.random.uniform(-1.0, 1.0, (P_MAX, D))
         fness = [eval(pop[x],e) for x in range(P_MAX)]
-        best = [fness[0] for x in range(NFC/P_MAX * D)]
         gBest = np.random.uniform(0.0,0.0,(D))
         for x in range(D):
             gBest[x] = pop[0][x]
@@ -64,10 +68,12 @@ for e in range(0, 9):
                 for d in range(D):
                         gBest[d] = pop[j][d]
 
-        for x in range(0, NFC/P_MAX * D):
-            end = time() - start
+        end = time() - start
             
-            print("%3d  iteration: %3d  function: %s    time: %10.4f s" % ((x * 1.0)/(NFC/P_MAX * D) * 100, r, prefix, end))
+        print("iteration: %3d  function: %s    time: %10.4f s" % (r, prefix, end))
+
+        for x in range(0, NFC/P_MAX * D):
+
             W = 0.5 * (((NFC/P_MAX * D) - x * 1.0) / ((NFC/P_MAX) *D)) + 0.4
 
             for j in range(P_MAX):
@@ -99,11 +105,8 @@ for e in range(0, 9):
                     for d in range(D):
                         gBest[d] = pop[j][d]
 
-                if(fness[j] < best[x]):
-                    best[x] = fness[j]
-
             #print best[x]
-            avg[x] += best[x]
+            avg[x] += fgBest
 
         for x in range(P_MAX):
             runs[x+(P_MAX * (r-1))] = pop[x]
@@ -117,8 +120,8 @@ for e in range(0, 9):
         avg[x] = avg[x]/51.0
 
     plot_file = open("plots/" + str(D) + "_" + prefix + "_pso_plot" + ".csv","w")
-    for line in avg:
-        plot_file.write(str(line) + "\n")
+    for x in range(NFC/P_MAX*D):
+        plot_file.write(str(avg[x]) + "\n")
     plot_file.close()
 
 
